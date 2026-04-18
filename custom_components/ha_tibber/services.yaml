@@ -1,0 +1,16 @@
+get_prices:
+  name: Get energy prices
+  description: Fetches hourly energy prices from Tibber.
+  fields:
+    start:
+      name: Start
+      description: Start time for price data (optional).
+      required: false
+      selector:
+        datetime:
+    end:
+      name: End
+      description: End time for price data (optional).
+      required: false
+      selector:
+        datetime:

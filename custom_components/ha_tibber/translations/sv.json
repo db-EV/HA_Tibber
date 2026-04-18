@@ -1,0 +1,163 @@
+{
+  "config": {
+    "step": {
+      "pick_implementation": {
+        "title": "Välj autentiseringsmetod"
+      },
+      "reauth_confirm": {
+        "title": "Autentisera på nytt med Tibber",
+        "description": "Dina Tibber-uppgifter har gått ut. Vänligen autentisera på nytt."
+      },
+      "connection_error": {
+        "title": "Anslutningsfel",
+        "description": "Kunde inte ansluta till Tibber. Försök igen."
+      }
+    },
+    "abort": {
+      "already_configured": "Kontot är redan konfigurerat.",
+      "already_in_progress": "Konfigurationsflödet pågår redan.",
+      "connection_error": "Kunde inte ansluta till Tibber.",
+      "invalid_access_token": "Ogiltig åtkomsttoken.",
+      "missing_credentials": "Applikationsuppgifter är inte konfigurerade.",
+      "no_url_available": "Ingen URL tillgänglig. För mer information om detta fel, se hjälpsektionen.",
+      "oauth_error": "Mottog ogiltig tokendata.",
+      "oauth_timeout": "Tidsgräns vid hämtning av OAuth-token.",
+      "oauth_unauthorized": "OAuth-auktoriseringsfel vid tokenbegäran.",
+      "wrong_account": "Fel konto. Använd samma konto som ursprungligen konfigurerades.",
+      "reauth_successful": "Ny autentisering lyckades."
+    },
+    "create_entry": {
+      "default": "Autentiseringen med Tibber lyckades."
+    }
+  },
+  "entity": {
+    "sensor": {
+      "current_electricity_price": {
+        "name": "Aktuellt elpris"
+      },
+      "monthly_cost": {
+        "name": "Månadskostnad"
+      },
+      "monthly_consumption": {
+        "name": "Månadsförbrukning"
+      },
+      "monthly_peak_hour_consumption": {
+        "name": "Månadens förbrukning under topptimme"
+      },
+      "monthly_peak_hour_time": {
+        "name": "Månadens tidpunkt för topptimme"
+      },
+      "current_power_consumption": {
+        "name": "Aktuell effekt"
+      },
+      "current_power_production": {
+        "name": "Aktuell produktionseffekt"
+      },
+      "minimum_power_consumption": {
+        "name": "Minsta effekt"
+      },
+      "average_power_consumption": {
+        "name": "Genomsnittlig effekt"
+      },
+      "maximum_power_consumption": {
+        "name": "Högsta effekt"
+      },
+      "minimum_power_production": {
+        "name": "Minsta produktionseffekt"
+      },
+      "maximum_power_production": {
+        "name": "Högsta produktionseffekt"
+      },
+      "daily_accumulated_consumption": {
+        "name": "Dagligt ackumulerad förbrukning"
+      },
+      "daily_accumulated_production": {
+        "name": "Dagligt ackumulerad produktion"
+      },
+      "daily_accumulated_cost": {
+        "name": "Dagligt ackumulerad kostnad"
+      },
+      "daily_accumulated_reward": {
+        "name": "Dagligt ackumulerad ersättning"
+      },
+      "hourly_accumulated_consumption": {
+        "name": "Timvis ackumulerad förbrukning"
+      },
+      "hourly_accumulated_production": {
+        "name": "Timvis ackumulerad produktion"
+      },
+      "meter_reading_consumption": {
+        "name": "Mätaravläsning förbrukning"
+      },
+      "meter_reading_production": {
+        "name": "Mätaravläsning produktion"
+      },
+      "voltage_phase_1": {
+        "name": "Spänning fas 1"
+      },
+      "voltage_phase_2": {
+        "name": "Spänning fas 2"
+      },
+      "voltage_phase_3": {
+        "name": "Spänning fas 3"
+      },
+      "current_phase_1": {
+        "name": "Ström fas 1"
+      },
+      "current_phase_2": {
+        "name": "Ström fas 2"
+      },
+      "current_phase_3": {
+        "name": "Ström fas 3"
+      },
+      "pulse_signal_strength": {
+        "name": "Pulse-signalstyrka"
+      },
+      "power_factor": {
+        "name": "Effektfaktor"
+      },
+      "reactive_power_consumption": {
+        "name": "Reaktiv effekt"
+      },
+      "reactive_power_production": {
+        "name": "Reaktiv produktionseffekt"
+      },
+      "current_net_power": {
+        "name": "Aktuell nettoeffekt"
+      }
+    }
+  },
+  "exceptions": {
+    "auth_error": {
+      "message": "Autentisering misslyckades. Vänligen autentisera på nytt med Tibber."
+    },
+    "api_error": {
+      "message": "Fel vid kommunikation med Tibber-API:et."
+    },
+    "timeout_error": {
+      "message": "Tidsgräns vid kommunikation med Tibber-API:et."
+    },
+    "send_notification_timeout": {
+      "message": "Tidsgräns vid sändning av pushnotis till Tibber."
+    },
+    "no_config_entry": {
+      "message": "Ingen HA Tibber-integration konfigurerad."
+    }
+  },
+  "services": {
+    "get_prices": {
+      "name": "Hämta energipriser",
+      "description": "Hämtar timvisa energipriser från Tibber.",
+      "fields": {
+        "start": {
+          "name": "Start",
+          "description": "Starttid för prisdata."
+        },
+        "end": {
+          "name": "Slut",
+          "description": "Sluttid för prisdata."
+        }
+      }
+    }
+  }
+}

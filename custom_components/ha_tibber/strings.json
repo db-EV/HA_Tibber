@@ -1,0 +1,163 @@
+{
+  "config": {
+    "step": {
+      "pick_implementation": {
+        "title": "Pick authentication method"
+      },
+      "reauth_confirm": {
+        "title": "Re-authenticate with Tibber",
+        "description": "Your Tibber credentials have expired. Please re-authenticate."
+      },
+      "connection_error": {
+        "title": "Connection error",
+        "description": "Could not connect to Tibber. Please try again."
+      }
+    },
+    "abort": {
+      "already_configured": "Account is already configured.",
+      "already_in_progress": "Configuration flow is already in progress.",
+      "connection_error": "Could not connect to Tibber.",
+      "invalid_access_token": "Invalid access token.",
+      "missing_credentials": "Application credentials not configured.",
+      "no_url_available": "No URL available. For more information about this error, check the help section.",
+      "oauth_error": "Received invalid token data.",
+      "oauth_timeout": "Timeout resolving OAuth token.",
+      "oauth_unauthorized": "OAuth authorization error on token request.",
+      "wrong_account": "Wrong account. Please use the same account as originally configured.",
+      "reauth_successful": "Re-authentication was successful."
+    },
+    "create_entry": {
+      "default": "Successfully authenticated with Tibber."
+    }
+  },
+  "entity": {
+    "sensor": {
+      "current_electricity_price": {
+        "name": "Current electricity price"
+      },
+      "monthly_cost": {
+        "name": "Monthly cost"
+      },
+      "monthly_consumption": {
+        "name": "Monthly consumption"
+      },
+      "monthly_peak_hour_consumption": {
+        "name": "Monthly peak hour consumption"
+      },
+      "monthly_peak_hour_time": {
+        "name": "Monthly peak hour time"
+      },
+      "current_power_consumption": {
+        "name": "Current power consumption"
+      },
+      "current_power_production": {
+        "name": "Current power production"
+      },
+      "minimum_power_consumption": {
+        "name": "Minimum power consumption"
+      },
+      "average_power_consumption": {
+        "name": "Average power consumption"
+      },
+      "maximum_power_consumption": {
+        "name": "Maximum power consumption"
+      },
+      "minimum_power_production": {
+        "name": "Minimum power production"
+      },
+      "maximum_power_production": {
+        "name": "Maximum power production"
+      },
+      "daily_accumulated_consumption": {
+        "name": "Daily accumulated consumption"
+      },
+      "daily_accumulated_production": {
+        "name": "Daily accumulated production"
+      },
+      "daily_accumulated_cost": {
+        "name": "Daily accumulated cost"
+      },
+      "daily_accumulated_reward": {
+        "name": "Daily accumulated reward"
+      },
+      "hourly_accumulated_consumption": {
+        "name": "Hourly accumulated consumption"
+      },
+      "hourly_accumulated_production": {
+        "name": "Hourly accumulated production"
+      },
+      "meter_reading_consumption": {
+        "name": "Meter reading consumption"
+      },
+      "meter_reading_production": {
+        "name": "Meter reading production"
+      },
+      "voltage_phase_1": {
+        "name": "Voltage phase 1"
+      },
+      "voltage_phase_2": {
+        "name": "Voltage phase 2"
+      },
+      "voltage_phase_3": {
+        "name": "Voltage phase 3"
+      },
+      "current_phase_1": {
+        "name": "Current phase 1"
+      },
+      "current_phase_2": {
+        "name": "Current phase 2"
+      },
+      "current_phase_3": {
+        "name": "Current phase 3"
+      },
+      "pulse_signal_strength": {
+        "name": "Pulse signal strength"
+      },
+      "power_factor": {
+        "name": "Power factor"
+      },
+      "reactive_power_consumption": {
+        "name": "Reactive power consumption"
+      },
+      "reactive_power_production": {
+        "name": "Reactive power production"
+      },
+      "current_net_power": {
+        "name": "Current net power"
+      }
+    }
+  },
+  "exceptions": {
+    "auth_error": {
+      "message": "Authentication failed. Please re-authenticate with Tibber."
+    },
+    "api_error": {
+      "message": "Error communicating with the Tibber API."
+    },
+    "timeout_error": {
+      "message": "Timeout communicating with the Tibber API."
+    },
+    "send_notification_timeout": {
+      "message": "Timeout sending push notification to Tibber."
+    },
+    "no_config_entry": {
+      "message": "No HA Tibber integration configured."
+    }
+  },
+  "services": {
+    "get_prices": {
+      "name": "Get energy prices",
+      "description": "Fetches hourly energy prices from Tibber.",
+      "fields": {
+        "start": {
+          "name": "Start",
+          "description": "Start time for price data."
+        },
+        "end": {
+          "name": "End",
+          "description": "End time for price data."
+        }
+      }
+    }
+  }
+}

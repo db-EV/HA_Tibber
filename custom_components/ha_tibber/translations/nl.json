@@ -1,0 +1,163 @@
+{
+  "config": {
+    "step": {
+      "pick_implementation": {
+        "title": "Kies authenticatiemethode"
+      },
+      "reauth_confirm": {
+        "title": "Opnieuw authenticeren bij Tibber",
+        "description": "Uw Tibber-inloggegevens zijn verlopen. Authenticeer opnieuw."
+      },
+      "connection_error": {
+        "title": "Verbindingsfout",
+        "description": "Kan geen verbinding maken met Tibber. Probeer het opnieuw."
+      }
+    },
+    "abort": {
+      "already_configured": "Account is al geconfigureerd.",
+      "already_in_progress": "Configuratieproces is al gaande.",
+      "connection_error": "Kan geen verbinding maken met Tibber.",
+      "invalid_access_token": "Ongeldig toegangstoken.",
+      "missing_credentials": "Applicatiegegevens zijn niet geconfigureerd.",
+      "no_url_available": "Geen URL beschikbaar. Raadpleeg het helpgedeelte voor meer informatie over deze fout.",
+      "oauth_error": "Ongeldige tokengegevens ontvangen.",
+      "oauth_timeout": "Time-out bij het ophalen van het OAuth-token.",
+      "oauth_unauthorized": "OAuth-autorisatiefout bij tokenverzoek.",
+      "wrong_account": "Verkeerd account. Gebruik hetzelfde account als oorspronkelijk geconfigureerd.",
+      "reauth_successful": "Opnieuw authenticeren is gelukt."
+    },
+    "create_entry": {
+      "default": "Succesvol geauthenticeerd bij Tibber."
+    }
+  },
+  "entity": {
+    "sensor": {
+      "current_electricity_price": {
+        "name": "Actuele elektriciteitsprijs"
+      },
+      "monthly_cost": {
+        "name": "Maandelijkse kosten"
+      },
+      "monthly_consumption": {
+        "name": "Maandelijks verbruik"
+      },
+      "monthly_peak_hour_consumption": {
+        "name": "Maandelijks verbruik piekuur"
+      },
+      "monthly_peak_hour_time": {
+        "name": "Maandelijks tijdstip piekuur"
+      },
+      "current_power_consumption": {
+        "name": "Actueel vermogen"
+      },
+      "current_power_production": {
+        "name": "Actueel productievermogen"
+      },
+      "minimum_power_consumption": {
+        "name": "Minimaal vermogen"
+      },
+      "average_power_consumption": {
+        "name": "Gemiddeld vermogen"
+      },
+      "maximum_power_consumption": {
+        "name": "Maximaal vermogen"
+      },
+      "minimum_power_production": {
+        "name": "Minimaal productievermogen"
+      },
+      "maximum_power_production": {
+        "name": "Maximaal productievermogen"
+      },
+      "daily_accumulated_consumption": {
+        "name": "Dagelijks geaccumuleerd verbruik"
+      },
+      "daily_accumulated_production": {
+        "name": "Dagelijks geaccumuleerde productie"
+      },
+      "daily_accumulated_cost": {
+        "name": "Dagelijks geaccumuleerde kosten"
+      },
+      "daily_accumulated_reward": {
+        "name": "Dagelijks geaccumuleerde vergoeding"
+      },
+      "hourly_accumulated_consumption": {
+        "name": "Per uur geaccumuleerd verbruik"
+      },
+      "hourly_accumulated_production": {
+        "name": "Per uur geaccumuleerde productie"
+      },
+      "meter_reading_consumption": {
+        "name": "Meterstand verbruik"
+      },
+      "meter_reading_production": {
+        "name": "Meterstand productie"
+      },
+      "voltage_phase_1": {
+        "name": "Spanning fase 1"
+      },
+      "voltage_phase_2": {
+        "name": "Spanning fase 2"
+      },
+      "voltage_phase_3": {
+        "name": "Spanning fase 3"
+      },
+      "current_phase_1": {
+        "name": "Stroom fase 1"
+      },
+      "current_phase_2": {
+        "name": "Stroom fase 2"
+      },
+      "current_phase_3": {
+        "name": "Stroom fase 3"
+      },
+      "pulse_signal_strength": {
+        "name": "Pulse signaalsterkte"
+      },
+      "power_factor": {
+        "name": "Vermogensfactor"
+      },
+      "reactive_power_consumption": {
+        "name": "Blindvermogen"
+      },
+      "reactive_power_production": {
+        "name": "Blindvermogen productie"
+      },
+      "current_net_power": {
+        "name": "Actueel nettovermogen"
+      }
+    }
+  },
+  "exceptions": {
+    "auth_error": {
+      "message": "Authenticatie mislukt. Authenticeer opnieuw bij Tibber."
+    },
+    "api_error": {
+      "message": "Fout bij communicatie met de Tibber-API."
+    },
+    "timeout_error": {
+      "message": "Time-out bij communicatie met de Tibber-API."
+    },
+    "send_notification_timeout": {
+      "message": "Time-out bij het verzenden van pushmelding naar Tibber."
+    },
+    "no_config_entry": {
+      "message": "Geen HA Tibber-integratie geconfigureerd."
+    }
+  },
+  "services": {
+    "get_prices": {
+      "name": "Energieprijzen ophalen",
+      "description": "Haalt uurlijkse energieprijzen op van Tibber.",
+      "fields": {
+        "start": {
+          "name": "Start",
+          "description": "Starttijd voor prijsgegevens."
+        },
+        "end": {
+          "name": "Eind",
+          "description": "Eindtijd voor prijsgegevens."
+        }
+      }
+    }
+  }
+}

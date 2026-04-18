@@ -1,0 +1,13 @@
+{
+  "domain": "ha_tibber",
+  "name": "HA Tibber",
+  "codeowners": ["@db-EV"],
+  "config_flow": true,
+  "icon": "mdi:home-lightning-bolt",
+  "dependencies": ["application_credentials", "recorder"],
+  "documentation": "https://github.com/db-EV/HA_Tibber",
+  "integration_type": "hub",
+  "iot_class": "cloud_polling",
+  "requirements": [],
+  "version": "1.0.0"
+}

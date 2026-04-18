@@ -1,0 +1,163 @@
+{
+  "config": {
+    "step": {
+      "pick_implementation": {
+        "title": "Authentifizierungsmethode auswählen"
+      },
+      "reauth_confirm": {
+        "title": "Erneut bei Tibber authentifizieren",
+        "description": "Ihre Tibber-Anmeldedaten sind abgelaufen. Bitte authentifizieren Sie sich erneut."
+      },
+      "connection_error": {
+        "title": "Verbindungsfehler",
+        "description": "Verbindung zu Tibber konnte nicht hergestellt werden. Bitte versuchen Sie es erneut."
+      }
+    },
+    "abort": {
+      "already_configured": "Konto ist bereits konfiguriert.",
+      "already_in_progress": "Der Konfigurationsvorgang läuft bereits.",
+      "connection_error": "Verbindung zu Tibber konnte nicht hergestellt werden.",
+      "invalid_access_token": "Ungültiges Zugriffstoken.",
+      "missing_credentials": "Anmeldedaten der Anwendung nicht konfiguriert.",
+      "no_url_available": "Keine URL verfügbar. Weitere Informationen zu diesem Fehler finden Sie im Hilfebereich.",
+      "oauth_error": "Ungültige Token-Daten empfangen.",
+      "oauth_timeout": "Zeitüberschreitung beim Auflösen des OAuth-Tokens.",
+      "oauth_unauthorized": "OAuth-Autorisierungsfehler bei der Token-Anfrage.",
+      "wrong_account": "Falsches Konto. Bitte verwenden Sie dasselbe Konto wie ursprünglich konfiguriert.",
+      "reauth_successful": "Erneute Authentifizierung war erfolgreich."
+    },
+    "create_entry": {
+      "default": "Erfolgreich bei Tibber authentifiziert."
+    }
+  },
+  "entity": {
+    "sensor": {
+      "current_electricity_price": {
+        "name": "Aktueller Strompreis"
+      },
+      "monthly_cost": {
+        "name": "Monatliche Kosten"
+      },
+      "monthly_consumption": {
+        "name": "Monatlicher Verbrauch"
+      },
+      "monthly_peak_hour_consumption": {
+        "name": "Monatlicher Spitzenstundenverbrauch"
+      },
+      "monthly_peak_hour_time": {
+        "name": "Monatliche Spitzenstundenzeit"
+      },
+      "current_power_consumption": {
+        "name": "Aktuelle Leistung"
+      },
+      "current_power_production": {
+        "name": "Aktuelle Erzeugungsleistung"
+      },
+      "minimum_power_consumption": {
+        "name": "Minimale Leistung"
+      },
+      "average_power_consumption": {
+        "name": "Durchschnittliche Leistung"
+      },
+      "maximum_power_consumption": {
+        "name": "Maximale Leistung"
+      },
+      "minimum_power_production": {
+        "name": "Minimale Erzeugungsleistung"
+      },
+      "maximum_power_production": {
+        "name": "Maximale Erzeugungsleistung"
+      },
+      "daily_accumulated_consumption": {
+        "name": "Täglich kumulierter Verbrauch"
+      },
+      "daily_accumulated_production": {
+        "name": "Täglich kumulierte Erzeugung"
+      },
+      "daily_accumulated_cost": {
+        "name": "Täglich kumulierte Kosten"
+      },
+      "daily_accumulated_reward": {
+        "name": "Täglich kumulierte Vergütung"
+      },
+      "hourly_accumulated_consumption": {
+        "name": "Stündlich kumulierter Verbrauch"
+      },
+      "hourly_accumulated_production": {
+        "name": "Stündlich kumulierte Erzeugung"
+      },
+      "meter_reading_consumption": {
+        "name": "Zählerstand Verbrauch"
+      },
+      "meter_reading_production": {
+        "name": "Zählerstand Erzeugung"
+      },
+      "voltage_phase_1": {
+        "name": "Spannung Phase 1"
+      },
+      "voltage_phase_2": {
+        "name": "Spannung Phase 2"
+      },
+      "voltage_phase_3": {
+        "name": "Spannung Phase 3"
+      },
+      "current_phase_1": {
+        "name": "Strom Phase 1"
+      },
+      "current_phase_2": {
+        "name": "Strom Phase 2"
+      },
+      "current_phase_3": {
+        "name": "Strom Phase 3"
+      },
+      "pulse_signal_strength": {
+        "name": "Pulse-Signalstärke"
+      },
+      "power_factor": {
+        "name": "Leistungsfaktor"
+      },
+      "reactive_power_consumption": {
+        "name": "Blindleistung"
+      },
+      "reactive_power_production": {
+        "name": "Blindleistung Erzeugung"
+      },
+      "current_net_power": {
+        "name": "Aktuelle Nettoleistung"
+      }
+    }
+  },
+  "exceptions": {
+    "auth_error": {
+      "message": "Authentifizierung fehlgeschlagen. Bitte authentifizieren Sie sich erneut bei Tibber."
+    },
+    "api_error": {
+      "message": "Fehler bei der Kommunikation mit der Tibber-API."
+    },
+    "timeout_error": {
+      "message": "Zeitüberschreitung bei der Kommunikation mit der Tibber-API."
+    },
+    "send_notification_timeout": {
+      "message": "Zeitüberschreitung beim Senden der Push-Benachrichtigung an Tibber."
+    },
+    "no_config_entry": {
+      "message": "Keine HA-Tibber-Integration konfiguriert."
+    }
+  },
+  "services": {
+    "get_prices": {
+      "name": "Energiepreise abrufen",
+      "description": "Ruft stündliche Energiepreise von Tibber ab.",
+      "fields": {
+        "start": {
+          "name": "Start",
+          "description": "Startzeit für Preisdaten."
+        },
+        "end": {
+          "name": "Ende",
+          "description": "Endzeit für Preisdaten."
+        }
+      }
+    }
+  }
+}
