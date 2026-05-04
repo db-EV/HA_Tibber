@@ -98,9 +98,20 @@ class TibberConnection:
         """Fetch viewer info and populate homes."""
         data = await self._gql_client.execute(INFO)
         if not data:
+            _LOGGER.warning(
+                "Tibber INFO query returned no data; "
+                "homes will not be populated",
+            )
             return
 
-        viewer = data.get("viewer", {})
+        viewer = data.get("viewer")
+        if not viewer:
+            _LOGGER.warning(
+                "Tibber INFO response missing 'viewer'; payload keys=%s",
+                list(data.keys()),
+            )
+            return
+        viewer = viewer or {}
         self.name = viewer.get("name", "")
         self.user_id = viewer.get("userId", "")
 
@@ -114,6 +125,11 @@ class TibberConnection:
             )
 
         homes = viewer.get("homes", [])
+        if not homes:
+            _LOGGER.warning(
+                "Tibber INFO returned no homes for user %r",
+                self.user_id,
+            )
         self._all_home_ids = []
         self._active_home_ids = []
 
