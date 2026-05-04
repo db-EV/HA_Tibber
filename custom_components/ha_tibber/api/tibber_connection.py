@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import asyncio
+import datetime as _dt
 import logging
 from typing import TYPE_CHECKING
 from urllib.parse import urlparse
@@ -21,6 +22,34 @@ if TYPE_CHECKING:
 _LOGGER = logging.getLogger(__name__)
 
 _ALLOWED_WS_HOST_SUFFIX = ".tibber.com"
+
+
+def _parse_iso(value: str | None) -> _dt.datetime | None:
+    """Parse an ISO 8601 timestamp, returning None on failure."""
+    if not value or not isinstance(value, str):
+        return None
+    try:
+        return _dt.datetime.fromisoformat(value.replace("Z", "+00:00"))
+    except ValueError:
+        return None
+
+
+def _subscription_covers_now(
+    sub: dict, now: _dt.datetime,
+) -> bool:
+    """Return True if subscription's validity window covers ``now``.
+
+    Tibber sometimes reports ``currentSubscription.status`` as ``ended``
+    while the contract is still within its valid date range, so the
+    date window is the more reliable signal.
+    """
+    valid_from = _parse_iso(sub.get("validFrom"))
+    valid_to = _parse_iso(sub.get("validTo"))
+    if valid_from and valid_from > now:
+        return False
+    if valid_to and valid_to < now:
+        return False
+    return valid_from is not None or valid_to is not None
 
 
 def _is_trusted_ws_url(url: str) -> bool:
@@ -143,6 +172,18 @@ class TibberConnection:
             subscription = home_data.get("currentSubscription") or {}
             status = subscription.get("status")
             is_active = isinstance(status, str) and status.lower() == "running"
+
+            # Tibber's currentSubscription.status occasionally reports
+            # "ended" while the contract is still within its validity
+            # window (renewed/extended contracts).  Fall back to the
+            # subscriptions list and trust the date range.
+            if not is_active:
+                now = _dt.datetime.now(_dt.timezone.utc)
+                for sub in home_data.get("subscriptions") or []:
+                    if _subscription_covers_now(sub, now):
+                        is_active = True
+                        break
+
             if is_active:
                 self._active_home_ids.append(home_id)
 

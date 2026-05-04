@@ -20,6 +20,7 @@ INFO = """
       appNickname
       features { realTimeConsumptionEnabled }
       currentSubscription { status }
+      subscriptions { validFrom validTo status }
     }
   }
 }
