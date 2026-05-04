@@ -6,6 +6,8 @@ import asyncio
 import datetime
 import logging
 
+import aiohttp
+
 from homeassistant.components.recorder import get_instance
 from homeassistant.components.recorder.models import (
     StatisticData,
@@ -165,8 +167,15 @@ class TibberPriceCoordinator(
             raise ConfigEntryAuthFailed(
                 f"Authentication failed: {err}",
             ) from err
+        except aiohttp.ClientResponseError as err:
+            if 400 <= err.status < 500:
+                raise ConfigEntryAuthFailed(
+                    f"OAuth token refresh failed: {err.status}",
+                ) from err
+            raise UpdateFailed(f"OAuth error: {err}") from err
         except (
             TimeoutError,
+            aiohttp.ClientError,
             RetryableHttpExceptionError,
             RateLimitExceededError,
         ) as err:
@@ -258,8 +267,15 @@ class TibberDataCoordinator(DataUpdateCoordinator[None]):
             raise ConfigEntryAuthFailed(
                 f"Authentication failed: {err}",
             ) from err
+        except aiohttp.ClientResponseError as err:
+            if 400 <= err.status < 500:
+                raise ConfigEntryAuthFailed(
+                    f"OAuth token refresh failed: {err.status}",
+                ) from err
+            raise UpdateFailed(f"OAuth error: {err}") from err
         except (
             TimeoutError,
+            aiohttp.ClientError,
             RetryableHttpExceptionError,
             RateLimitExceededError,
         ) as err:
