@@ -98,9 +98,20 @@ class TibberConnection:
         """Fetch viewer info and populate homes."""
         data = await self._gql_client.execute(INFO)
         if not data:
+            _LOGGER.warning(
+                "Tibber INFO query returned no data; "
+                "homes will not be populated",
+            )
             return
 
-        viewer = data.get("viewer", {})
+        viewer = data.get("viewer")
+        if not viewer:
+            _LOGGER.warning(
+                "Tibber INFO response missing 'viewer'; payload keys=%s",
+                list(data.keys()),
+            )
+            return
+        viewer = viewer or {}
         self.name = viewer.get("name", "")
         self.user_id = viewer.get("userId", "")
 
@@ -114,6 +125,11 @@ class TibberConnection:
             )
 
         homes = viewer.get("homes", [])
+        if not homes:
+            _LOGGER.warning(
+                "Tibber INFO returned no homes for user %r",
+                self.user_id,
+            )
         self._all_home_ids = []
         self._active_home_ids = []
 
@@ -126,7 +142,8 @@ class TibberConnection:
 
             subscription = home_data.get("currentSubscription") or {}
             status = subscription.get("status")
-            if status == "running":
+            is_active = isinstance(status, str) and status.lower() == "running"
+            if is_active:
                 self._active_home_ids.append(home_id)
 
             home = self._homes.get(home_id)
@@ -144,7 +161,24 @@ class TibberConnection:
                     "realTimeConsumptionEnabled", False,
                 )
             )
-            home._has_active_subscription = status == "running"
+            home._has_active_subscription = is_active
+
+        _LOGGER.info(
+            "Tibber update_info: %d home(s), %d active; statuses=%s",
+            len(self._all_home_ids),
+            len(self._active_home_ids),
+            [
+                (h.get("id"), (h.get("currentSubscription") or {}).get("status"))
+                for h in homes
+            ],
+        )
+
+        if self._all_home_ids and not self._active_home_ids:
+            _LOGGER.warning(
+                "No active Tibber subscriptions found for %d home(s); "
+                "entities will be unavailable until a subscription is active",
+                len(self._all_home_ids),
+            )
 
     async def send_notification(self, title: str, message: str) -> bool:
         """Send a push notification via Tibber."""

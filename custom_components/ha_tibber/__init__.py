@@ -143,6 +143,9 @@ async def async_setup_entry(
 
     # Check for active homes
     active_homes = client.get_homes(only_active=True)
+    _LOGGER.info(
+        "ha_tibber setup: %d active home(s) found", len(active_homes),
+    )
 
     # Set up coordinators
     price_coordinator: TibberPriceCoordinator | None = None
