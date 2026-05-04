@@ -19,6 +19,7 @@ from homeassistant.components.recorder.statistics import (
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import UnitOfEnergy
 from homeassistant.core import HomeAssistant, callback
+from homeassistant.exceptions import ConfigEntryAuthFailed
 from homeassistant.helpers.event import async_call_later
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 from homeassistant.util import dt as dt_util
@@ -161,7 +162,9 @@ class TibberPriceCoordinator(
                     )
 
         except InvalidLoginError as err:
-            raise UpdateFailed(f"Authentication failed: {err}") from err
+            raise ConfigEntryAuthFailed(
+                f"Authentication failed: {err}",
+            ) from err
         except (
             TimeoutError,
             RetryableHttpExceptionError,
@@ -252,7 +255,9 @@ class TibberDataCoordinator(DataUpdateCoordinator[None]):
             await self._insert_statistics(client)
 
         except InvalidLoginError as err:
-            raise UpdateFailed(f"Authentication failed: {err}") from err
+            raise ConfigEntryAuthFailed(
+                f"Authentication failed: {err}",
+            ) from err
         except (
             TimeoutError,
             RetryableHttpExceptionError,
