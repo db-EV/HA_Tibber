@@ -163,16 +163,6 @@ class TibberConnection:
             )
             home._has_active_subscription = is_active
 
-        _LOGGER.info(
-            "Tibber update_info: %d home(s), %d active; statuses=%s",
-            len(self._all_home_ids),
-            len(self._active_home_ids),
-            [
-                (h.get("id"), (h.get("currentSubscription") or {}).get("status"))
-                for h in homes
-            ],
-        )
-
         if self._all_home_ids and not self._active_home_ids:
             _LOGGER.warning(
                 "No active Tibber subscriptions found for %d home(s); "
