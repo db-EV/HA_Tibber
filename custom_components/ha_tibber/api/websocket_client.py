@@ -29,6 +29,9 @@ _MSG_PONG = "pong"
 _WATCHDOG_INTERVAL = 5.0
 _MAX_BACKOFF = 300.0  # 5 minutes
 _INIT_TIMEOUT = 30.0
+# Pulse normally publishes every ~2s; this much silence on an
+# otherwise-open socket means the stream is dead and we must reconnect.
+_STALE_THRESHOLD = 90.0
 
 
 class TibberWebSocketClient:
@@ -66,8 +69,21 @@ class TibberWebSocketClient:
         self._ws_url = url
 
     def set_access_token(self, token: str) -> None:
-        """Update the access token (applied on next reconnect)."""
+        """Update the access token.
+
+        If the token actually changed while a connection is live, force
+        a reconnect so the server-side session uses fresh credentials
+        instead of waiting until the server drops the old token.
+        """
+        if token == self._access_token:
+            return
         self._access_token = token
+        if self._connected and self._subscriptions:
+            try:
+                loop = asyncio.get_running_loop()
+            except RuntimeError:
+                return
+            loop.create_task(self._reconnect())
 
     async def subscribe(
         self,
@@ -255,6 +271,9 @@ class TibberWebSocketClient:
             )
             callback = self._subscriptions.get(sub_id) if sub_id else None
             if callback and measurement:
+                # Reset backoff on any healthy data frame so a long
+                # ack-then-stall episode doesn't accumulate retries.
+                self._retry_count = 0
                 try:
                     callback(measurement)
                 except (TypeError, ValueError, KeyError) as err:
@@ -264,32 +283,80 @@ class TibberWebSocketClient:
                     )
 
         elif msg_type == _MSG_ERROR:
-            _LOGGER.warning(
-                "GraphQL subscription error for %s", data.get("id"),
-            )
+            sub_id = data.get("id")
+            _LOGGER.warning("GraphQL subscription error for %s", sub_id)
+            if sub_id in self._subscriptions:
+                await self._mark_disconnected()
 
         elif msg_type == _MSG_COMPLETE:
-            _LOGGER.debug("Subscription %s completed by server", data.get("id"))
+            sub_id = data.get("id")
+            _LOGGER.debug("Subscription %s completed by server", sub_id)
+            if sub_id in self._subscriptions:
+                await self._mark_disconnected()
 
         elif msg_type == _MSG_PING:
             await self._send_json({"type": _MSG_PONG})
 
+    async def _mark_disconnected(self) -> None:
+        """Force the watchdog to reconnect on its next tick."""
+        self._connected = False
+        if self._ws and not self._ws.closed:
+            try:
+                await self._ws.close()
+            except (aiohttp.ClientError, OSError) as err:
+                _LOGGER.debug(
+                    "Error closing WebSocket during disconnect: %s",
+                    type(err).__name__,
+                )
+
     async def _watchdog(self) -> None:
-        """Monitor connection health and reconnect if needed."""
+        """Monitor connection health and reconnect if needed.
+
+        This task must be indestructible: it is only spawned by
+        ``subscribe()`` and not recreated elsewhere, so an unhandled
+        exception here would silently kill all RT recovery until the
+        integration is reloaded.  Catch every exception, log it, and
+        keep looping until we explicitly want to stop.
+        """
         while self._should_reconnect and self._subscriptions:
             try:
                 await asyncio.sleep(_WATCHDOG_INTERVAL)
-                if not self._connected or not self._ws or self._ws.closed:
-                    _LOGGER.debug("WebSocket disconnected, attempting reconnect")
+
+                disconnected = (
+                    not self._connected
+                    or not self._ws
+                    or self._ws.closed
+                )
+
+                stale = False
+                if not disconnected and self._last_message_time:
+                    idle = (
+                        asyncio.get_running_loop().time()
+                        - self._last_message_time
+                    )
+                    if idle > _STALE_THRESHOLD:
+                        stale = True
+                        _LOGGER.warning(
+                            "Tibber RT stream stalled (%.0fs since last "
+                            "message); forcing reconnect", idle,
+                        )
+
+                if disconnected or stale:
+                    if not stale:
+                        _LOGGER.debug(
+                            "WebSocket disconnected, attempting reconnect",
+                        )
                     await self._reconnect()
             except asyncio.CancelledError:
                 return
-            except (
-                aiohttp.ClientError,
-                TimeoutError,
-                WebSocketHandshakeError,
-            ) as err:
-                _LOGGER.debug("Error in watchdog: %s", type(err).__name__)
+            except Exception as err:  # noqa: BLE001
+                _LOGGER.warning(
+                    "Watchdog recovered from %s: %s",
+                    type(err).__name__, err,
+                )
+                # Make sure the next tick sees a clean slate so the
+                # reconnect path runs again.
+                self._connected = False
 
     async def _reconnect(self) -> None:
         """Reconnect with exponential backoff and jitter."""
@@ -323,10 +390,9 @@ class TibberWebSocketClient:
             for sub_id, home_id in self._subscription_home_ids.items():
                 if sub_id in self._subscriptions:
                     await self._send_subscribe(sub_id, home_id)
-        except (
-            aiohttp.ClientError,
-            TimeoutError,
-            SubscriptionEndpointMissingError,
-            WebSocketHandshakeError,
-        ) as err:
-            _LOGGER.debug("Reconnection failed: %s", type(err).__name__)
+        except asyncio.CancelledError:
+            raise
+        except Exception as err:  # noqa: BLE001
+            _LOGGER.debug(
+                "Reconnection failed: %s: %s", type(err).__name__, err,
+            )
